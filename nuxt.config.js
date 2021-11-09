@@ -29,21 +29,34 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [['nuxt-webfontloader'], ['nuxt-fontawesome']],
-  // fontawesome: {
-  // imports: [
-  //   {
-  //     set: '@fortawesome/free-solid-svg-icons',
-  //     icons: ['fas'],
-  //   },
-  // ],
-  // },
+  modules: [
+    ['nuxt-webfontloader'],
+    ['nuxt-fontawesome'],
+    ['@nuxtjs/firebase'],
+    ['@nuxtjs/dotenv'],
+  ],
   fontawesome: {
     component: 'fa',
   },
   webfontloader: {
     google: {
       families: ['Kosugi Maru'],
+    },
+  },
+
+  firebase: {
+    config: {
+      apiKey: process.env.apiKey,
+      authDomain: process.env.authDomain,
+      projectId: process.env.projectId,
+      storageBucket: process.env.storageBucket,
+      messagingSenderId: process.env.messagingSenderId,
+      appId: process.env.appId,
+      measurementId: process.env.measurementId,
+    },
+    services: {
+      auth: true,
+      firestore: true,
     },
   },
 

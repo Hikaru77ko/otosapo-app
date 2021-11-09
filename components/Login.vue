@@ -2,7 +2,7 @@
   <div class="login-screen">
     <div class="login-screen-top">
       <p>ログイン画面</p>
-      <span @click="$emit('componentCloseModalLogin')">
+      <span @click="closeModalLogin()">
         <fa :icon="faTimesCircle" class="icon-close fa-2x" />
       </span>
     </div>
@@ -13,7 +13,7 @@
         </div>
         <div class="email-input">
           <fa :icon="faEnvelope" class="inner-icon" />
-          <input id="email" type="email" />
+          <input id="email" v-model="userDate.email" type="email" />
         </div>
 
         <div class="inner-password">
@@ -21,11 +21,11 @@
         </div>
         <div class="password-input">
           <fa :icon="faLock" class="inner-icon" />
-          <input id="password" type="password" />
+          <input id="password" v-model="userDate.password" type="password" />
         </div>
       </div>
       <div class="wrapper-btn">
-        <button>ログイン</button>
+        <button @click="login()">ログイン</button>
       </div>
     </div>
   </div>
@@ -39,7 +39,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 export default {
   data() {
-    return {}
+    return {
+      userDate: {
+        email: '',
+        password: '',
+      },
+      modalNum: 2,
+    }
   },
   computed: {
     faTimesCircle() {
@@ -55,7 +61,18 @@ export default {
       return faLock
     },
   },
-  methods: {},
+  methods: {
+    closeModalLogin() {
+      this.$store.commit('closeModalLogin')
+    },
+    login() {
+      this.$store.dispatch('userLogin', {
+        email: this.userDate.email,
+        password: this.userDate.password,
+        modalNum: this.modalNum,
+      })
+    },
+  },
 }
 </script>
 

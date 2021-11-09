@@ -15,14 +15,14 @@
         </button>
       </li>
       <li>
-        <p>ゲスト名</p>
+        <p>{{ userName }} 様</p>
       </li>
     </ul>
-    <Modal v-if="modalLogin">
-      <Login @componentCloseModalLogin="closeModalLogin()" />
+    <Modal v-if="isModalLogin">
+      <Login />
     </Modal>
-    <Modal v-if="modalRegister">
-      <Register @componentCloseModalRegister="closeModalRegister()" />
+    <Modal v-if="isModalRegister">
+      <Register />
     </Modal>
   </div>
 </template>
@@ -30,24 +30,27 @@
 <script>
 export default {
   data() {
-    return {
-      modalLogin: false,
-      modalRegister: false,
-    }
+    return {}
+  },
+
+  computed: {
+    isModalRegister() {
+      return this.$store.getters.getModalStateRegister
+    },
+    isModalLogin() {
+      return this.$store.getters.getModalStateLogin
+    },
+    userName() {
+      return this.$store.getters.getLoginUserName
+    },
   },
 
   methods: {
-    openModalLogin() {
-      this.modalLogin = true
-    },
     openModalRegister() {
-      this.modalRegister = true
+      this.$store.commit('openModalRegister')
     },
-    closeModalLogin() {
-      this.modalLogin = false
-    },
-    closeModalRegister() {
-      this.modalRegister = false
+    openModalLogin() {
+      this.$store.commit('openModalLogin')
     },
   },
 }
