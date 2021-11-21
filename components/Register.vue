@@ -2,7 +2,7 @@
   <div class="register-screen">
     <div class="register-screen-top">
       <p>登録画面</p>
-      <span @click="$emit('componentCloseModalRegister')">
+      <span @click="closeModalRegister()">
         <fa :icon="faTimesCircle" class="icon-close fa-2x" />
       </span>
     </div>
@@ -13,7 +13,7 @@
         </div>
         <div class="username-input">
           <fa :icon="faUser" class="inner-icon" />
-          <input id="username" type="text" />
+          <input id="username" v-model="userDate.name" type="text" />
         </div>
 
         <div class="inner-email">
@@ -21,7 +21,7 @@
         </div>
         <div class="email-input">
           <fa :icon="faEnvelope" class="inner-icon" />
-          <input id="email" type="email" />
+          <input id="email" v-model="userDate.email" type="email" />
         </div>
 
         <div class="inner-password">
@@ -29,11 +29,11 @@
         </div>
         <div class="password-input">
           <fa :icon="faLock" class="inner-icon" />
-          <input id="password" type="password" />
+          <input id="password" v-model="userDate.password" type="password" />
         </div>
       </div>
       <div class="wrapper-btn">
-        <button>登録（無料）</button>
+        <button @click="register()">登録（無料）</button>
       </div>
     </div>
   </div>
@@ -47,7 +47,14 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 export default {
   data() {
-    return {}
+    return {
+      userDate: {
+        name: '',
+        email: '',
+        password: '',
+      },
+      modalNum: 1,
+    }
   },
   computed: {
     faTimesCircle() {
@@ -63,7 +70,19 @@ export default {
       return faLock
     },
   },
-  methods: {},
+  methods: {
+    closeModalRegister() {
+      this.$store.commit('closeModalRegister')
+    },
+    register() {
+      this.$store.dispatch('createUserData', {
+        email: this.userDate.email,
+        password: this.userDate.password,
+        userName: this.userDate.name,
+        modalNum: this.modalNum,
+      })
+    },
+  },
 }
 </script>
 

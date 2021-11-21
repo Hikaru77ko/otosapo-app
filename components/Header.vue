@@ -1,7 +1,9 @@
 <template>
   <div class="header">
     <div class="header-title">
-      <h1>音サポ</h1>
+      <NuxtLink to="/">
+        <h1>音サポ</h1>
+      </NuxtLink>
     </div>
     <ul>
       <li>
@@ -15,14 +17,14 @@
         </button>
       </li>
       <li>
-        <p>ゲスト名</p>
+        <p @click="myPageTransition()">{{ userName }} 様</p>
       </li>
     </ul>
-    <Modal v-if="modalLogin">
-      <Login @componentCloseModalLogin="closeModalLogin()" />
+    <Modal v-if="isModalLogin">
+      <Login />
     </Modal>
-    <Modal v-if="modalRegister">
-      <Register @componentCloseModalRegister="closeModalRegister()" />
+    <Modal v-if="isModalRegister">
+      <Register />
     </Modal>
   </div>
 </template>
@@ -30,24 +32,34 @@
 <script>
 export default {
   data() {
-    return {
-      modalLogin: false,
-      modalRegister: false,
-    }
+    return {}
+  },
+
+  computed: {
+    isModalRegister() {
+      return this.$store.getters.getModalStateRegister
+    },
+    isModalLogin() {
+      return this.$store.getters.getModalStateLogin
+    },
+    userName() {
+      return this.$store.getters.getLoginUserName
+    },
   },
 
   methods: {
-    openModalLogin() {
-      this.modalLogin = true
-    },
     openModalRegister() {
-      this.modalRegister = true
+      this.$store.commit('openModalRegister')
     },
-    closeModalLogin() {
-      this.modalLogin = false
+    openModalLogin() {
+      this.$store.commit('openModalLogin')
     },
-    closeModalRegister() {
-      this.modalRegister = false
+    myPageTransition() {
+      if (!this.$store.getters.getAuthUserUid) {
+        alert('ログインするとMyPageに遷移します')
+      } else {
+        this.$router.push('/my_page')
+      }
     },
   },
 }
@@ -61,6 +73,7 @@ h1 {
 
 p {
   color: white;
+  cursor: pointer;
 }
 
 .btn {
