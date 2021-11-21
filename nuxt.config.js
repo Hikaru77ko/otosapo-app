@@ -1,4 +1,5 @@
 export default {
+  mode: 'spa',
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'otosapo-app',
@@ -11,6 +12,10 @@ export default {
       { hid: 'description', name: 'description', content: '' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+  },
+
+  router: {
+    middleware: 'authCheck',
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css

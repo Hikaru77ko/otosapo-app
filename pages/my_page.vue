@@ -2,7 +2,9 @@
   <div>
     <div class="header">
       <div class="header-title">
-        <h1>音サポ</h1>
+        <NuxtLink to="/">
+          <h1>音サポ</h1>
+        </NuxtLink>
       </div>
       <ul>
         <li>

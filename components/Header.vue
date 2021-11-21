@@ -1,7 +1,9 @@
 <template>
   <div class="header">
     <div class="header-title">
-      <h1>音サポ</h1>
+      <NuxtLink to="/">
+        <h1>音サポ</h1>
+      </NuxtLink>
     </div>
     <ul>
       <li>
@@ -15,7 +17,7 @@
         </button>
       </li>
       <li>
-        <p>{{ userName }} 様</p>
+        <p @click="myPageTransition()">{{ userName }} 様</p>
       </li>
     </ul>
     <Modal v-if="isModalLogin">
@@ -52,6 +54,13 @@ export default {
     openModalLogin() {
       this.$store.commit('openModalLogin')
     },
+    myPageTransition() {
+      if (!this.$store.getters.getAuthUserUid) {
+        alert('ログインするとMyPageに遷移します')
+      } else {
+        this.$router.push('/my_page')
+      }
+    },
   },
 }
 </script>
@@ -64,6 +73,7 @@ h1 {
 
 p {
   color: white;
+  cursor: pointer;
 }
 
 .btn {

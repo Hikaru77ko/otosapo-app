@@ -4,7 +4,7 @@ export const state = () => ({
     isModalLogin: false,
   },
   userData: {
-    uid: '',
+    uid: null,
     userName: 'ゲスト',
   },
 })
@@ -18,6 +18,9 @@ export const getters = {
   },
   getLoginUserName(state) {
     return state.userData.userName
+  },
+  getAuthUserUid(state) {
+    return state.userData.uid
   },
 }
 
@@ -46,7 +49,27 @@ export const mutations = {
 }
 
 export const actions = {
-  // ユーザー登録処理
+  // レンダリング時authチェック
+  autoLogin({ commit, dispatch }) {
+    this.$fire.auth.onAuthStateChanged((userData) => {
+      console.log(userData)
+      if (!userData) {
+        dispatch('setUserData', {
+          userUid: null,
+          displayName: 'ゲスト',
+        })
+      } else {
+        const userUid = userData.uid
+        const displayName = userData.displayName
+        dispatch('setUserData', {
+          userUid,
+          displayName,
+        })
+      }
+    })
+  },
+
+  // アカウント作成
   async createUserData({ commit, dispatch }, payload) {
     try {
       const registerUserData =
@@ -55,23 +78,18 @@ export const actions = {
           payload.password
         )
       // ユーザー名登録
-      dispatch('userNameUpdate', payload.userName)
-
-      // トークン発行
-      const token = await this.$fire.auth.currentUser.getIdToken(true)
-
-      // トークンをストレージにセット
-      await dispatch('setToken', token)
+      await dispatch('userNameUpdate', payload.userName)
 
       // ユーザー情報からUidとdisplayNameをstorにセット
-      const userUid = await registerUserData.user.uid
-      const displayName = await registerUserData.user.displayName
-      await dispatch('setUserData', {
+      const userUid = registerUserData.user.uid
+      const displayName = payload.userName
+
+      dispatch('setUserData', {
         userUid,
         displayName,
       })
 
-      commit('closeModalLogin')
+      commit('closeModalRegister')
     } catch (e) {
       alert(e.message)
     }
@@ -85,27 +103,32 @@ export const actions = {
         payload.password
       )
 
-      console.log(loginUserData)
-
-      // トークン発行
-      const token = await this.$fire.auth.currentUser.getIdToken(true)
-
-      // トークンをストレージにセット
-      dispatch('setToken', token)
-
       // ユーザー情報からUidとdisplayNameをstorにセット
-      const userUid = await loginUserData.user.uid
-      const displayName = await loginUserData.user.displayName
-      await dispatch('setUserData', {
+      const userUid = loginUserData.user.uid
+      const displayName = loginUserData.user.displayName
+      dispatch('setUserData', {
         userUid,
         displayName,
       })
 
-      await commit('closeModalLogin')
+      commit('closeModalLogin')
     } catch (e) {
       alert(e.message)
     }
   },
+
+  // ログアウト処理
+  // async logout({ commit, dispatch }) {
+  //   try {
+  //     await this.$fire.auth.signout()
+  //     dispatch('setUserData', {
+  //       userUid: null,
+  //       displayName: 'ゲスト',
+  //     })
+  //   } catch (e) {
+  //     alert(e.message)
+  //   }
+  // },
 
   // ユーザー名登録処理
   async userNameUpdate({ commit }, payload) {
@@ -117,11 +140,6 @@ export const actions = {
     } catch (e) {
       alert(e.message)
     }
-  },
-
-  // ストレージにトークン登録
-  setToken({ commit }, payload) {
-    localStorage.setItem('idToken', payload)
   },
 
   // ユーザー名、uidをstoreに登録
