@@ -55,7 +55,7 @@ export default {
       this.$store.commit('openModalLogin')
     },
     myPageTransition() {
-      if (!this.$store.getters.getAuthUserUid) {
+      if (!this.$store.getters.getUserUid) {
         alert('ログインするとMyPageに遷移します')
       } else {
         this.$router.push('/my_page')

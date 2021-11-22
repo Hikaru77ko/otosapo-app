@@ -19,7 +19,7 @@ export const getters = {
   getLoginUserName(state) {
     return state.userData.userName
   },
-  getAuthUserUid(state) {
+  getUserUid(state) {
     return state.userData.uid
   },
 }
@@ -52,7 +52,6 @@ export const actions = {
   // レンダリング時authチェック
   autoLogin({ commit, dispatch }) {
     this.$fire.auth.onAuthStateChanged((userData) => {
-      console.log(userData)
       if (!userData) {
         dispatch('setUserData', {
           userUid: null,
@@ -118,17 +117,22 @@ export const actions = {
   },
 
   // ログアウト処理
-  // async logout({ commit, dispatch }) {
-  //   try {
-  //     await this.$fire.auth.signout()
-  //     dispatch('setUserData', {
-  //       userUid: null,
-  //       displayName: 'ゲスト',
-  //     })
-  //   } catch (e) {
-  //     alert(e.message)
-  //   }
-  // },
+  async logout({ commit, dispatch }) {
+    try {
+      const result = confirm('本当にログアウトしますか')
+      if (result) {
+        await this.$fire.auth.signOut()
+        dispatch('setUserData', {
+          userUid: null,
+          displayName: 'ゲスト',
+        })
+        alert('ログアウトしました')
+        this.$router.push('/')
+      }
+    } catch (e) {
+      alert(e.message)
+    }
+  },
 
   // ユーザー名登録処理
   async userNameUpdate({ commit }, payload) {
