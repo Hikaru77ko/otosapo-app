@@ -44,7 +44,6 @@ export default {
         email: '',
         password: '',
       },
-      modalNum: 2,
     }
   },
   computed: {
@@ -63,13 +62,12 @@ export default {
   },
   methods: {
     closeModalLogin() {
-      this.$store.commit('closeModalLogin')
+      this.$store.commit('changeStateModalLogin')
     },
     login() {
       this.$store.dispatch('userLogin', {
         email: this.userDate.email,
         password: this.userDate.password,
-        modalNum: this.modalNum,
       })
     },
   },

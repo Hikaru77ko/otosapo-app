@@ -53,7 +53,6 @@ export default {
         email: '',
         password: '',
       },
-      modalNum: 1,
     }
   },
   computed: {
@@ -72,14 +71,13 @@ export default {
   },
   methods: {
     closeModalRegister() {
-      this.$store.commit('closeModalRegister')
+      this.$store.commit('changeStateModalRegister')
     },
     register() {
       this.$store.dispatch('createUserData', {
         email: this.userDate.email,
         password: this.userDate.password,
         userName: this.userDate.name,
-        modalNum: this.modalNum,
       })
     },
   },

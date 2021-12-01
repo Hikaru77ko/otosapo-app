@@ -2,6 +2,7 @@ export const state = () => ({
   modal: {
     isModalRegister: false,
     isModalLogin: false,
+    isModalPost: false,
   },
   userData: {
     uid: null,
@@ -16,30 +17,33 @@ export const getters = {
   getModalStateLogin(state) {
     return state.modal.isModalLogin
   },
+  getModalStatePost(state) {
+    return state.modal.isModalPost
+  },
   getLoginUserName(state) {
     return state.userData.userName
   },
   getUserUid(state) {
     return state.userData.uid
   },
+  isAuthenticated(state) {
+    return !!state.userData.uid
+  },
 }
 
 export const mutations = {
-  openModalRegister(state) {
-    state.modal.isModalRegister = true
+  changeStateModalRegister(state) {
+    state.modal.isModalRegister = !state.modal.isModalRegister
   },
 
-  closeModalRegister(state) {
-    state.modal.isModalRegister = false
+  changeStateModalLogin(state) {
+    state.modal.isModalLogin = !state.modal.isModalLogin
   },
 
-  openModalLogin(state) {
-    state.modal.isModalLogin = true
+  changeStateModalPost(state) {
+    state.modal.isModalPost = !state.modal.isModalPost
   },
 
-  closeModalLogin(state) {
-    state.modal.isModalLogin = false
-  },
   setUserName(state, name) {
     state.userData.userName = name
   },
@@ -50,7 +54,7 @@ export const mutations = {
 
 export const actions = {
   // レンダリング時authチェック
-  autoLogin({ commit, dispatch }) {
+  autoLogin({ dispatch }) {
     this.$fire.auth.onAuthStateChanged((userData) => {
       if (!userData) {
         dispatch('setUserData', {

@@ -10,9 +10,6 @@
         </div>
       </div>
     </div>
-    <!-- 仮ボタン -->
-    <button @click="openModalPost()">投稿ボタン</button>
-    <!-- 仮ボタン -->
     <h3 class="heading">楽器別の投稿</h3>
     <div class="wrapper-postcard">
       <NuxtLink to="/guitar_posting_page">
@@ -48,28 +45,13 @@
         </div>
       </NuxtLink>
     </div>
-    <Modal v-if="modalPost">
-      <Post @componentCloseModalPost="closeModalPost()" />
-    </Modal>
   </div>
 </template>
 
 <script>
 export default {
   data() {
-    return {
-      modalPost: false,
-    }
-  },
-
-  methods: {
-    openModalPost() {
-      this.modalPost = true
-    },
-
-    closeModalPost() {
-      this.modalPost = false
-    },
+    return {}
   },
 }
 </script>

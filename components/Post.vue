@@ -2,7 +2,7 @@
   <div class="post-screen">
     <div class="post-screen-top">
       <p>投稿画面</p>
-      <span @click="$emit('componentCloseModalPost')">
+      <span @click="closeModalPost()">
         <fa :icon="faTimesCircle" class="icon-close fa-2x" />
       </span>
     </div>
@@ -74,6 +74,9 @@ export default {
     },
   },
   methods: {
+    closeModalPost() {
+      this.$store.commit('changeStateModalPost')
+    },
     openSerchResult() {
       this.serchResults = true
     },
