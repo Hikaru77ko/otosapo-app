@@ -5,7 +5,7 @@
         <h1>音サポ</h1>
       </NuxtLink>
     </div>
-    <ul>
+    <ul v-if="!isAuthenticated">
       <li>
         <button class="btn btn-login" @click="openModalLogin()">
           ログイン
@@ -17,7 +17,20 @@
         </button>
       </li>
       <li>
-        <p @click="myPageTransition()">{{ userName }} 様</p>
+        <p>{{ userName }} 様</p>
+      </li>
+    </ul>
+    <ul v-if="isAuthenticated">
+      <li>
+        <button class="btn btn-post" @click="openModalPost()">投稿する</button>
+      </li>
+      <li>
+        <button class="btn btn-mypage" @click="myPageTransition()">
+          Mypage
+        </button>
+      </li>
+      <li>
+        <p>{{ userName }} 様</p>
       </li>
     </ul>
     <Modal v-if="isModalLogin">
@@ -25,6 +38,9 @@
     </Modal>
     <Modal v-if="isModalRegister">
       <Register />
+    </Modal>
+    <Modal v-if="isModalPost">
+      <Post />
     </Modal>
   </div>
 </template>
@@ -42,6 +58,12 @@ export default {
     isModalLogin() {
       return this.$store.getters.getModalStateLogin
     },
+    isModalPost() {
+      return this.$store.getters.getModalStatePost
+    },
+    isAuthenticated() {
+      return this.$store.getters.isAuthenticated
+    },
     userName() {
       return this.$store.getters.getLoginUserName
     },
@@ -49,17 +71,16 @@ export default {
 
   methods: {
     openModalRegister() {
-      this.$store.commit('openModalRegister')
+      this.$store.commit('changeStateModalRegister')
     },
     openModalLogin() {
-      this.$store.commit('openModalLogin')
+      this.$store.commit('changeStateModalLogin')
+    },
+    openModalPost() {
+      this.$store.commit('changeStateModalPost')
     },
     myPageTransition() {
-      if (!this.$store.getters.getAuthUserUid) {
-        alert('ログインするとMyPageに遷移します')
-      } else {
-        this.$router.push('/my_page')
-      }
+      this.$router.push('/my_page')
     },
   },
 }
@@ -87,7 +108,20 @@ p {
 .btn-signup {
   color: white;
   background-color: #f4707f;
-  border: 3px dotted rgb(237, 215, 215);
+  border: 2px solid rgb(237, 215, 215);
+}
+
+.btn-post {
+  color: white;
+  background-color: #86ccf8;
+  border: 2px solid white;
+}
+
+.btn-login,
+.btn-mypage {
+  color: black;
+  background-color: white;
+  border: 1px solid black;
 }
 
 .header {

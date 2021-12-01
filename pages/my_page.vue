@@ -8,7 +8,7 @@
       </div>
       <ul>
         <li>
-          <button class="btn btn-logout">ログアウト</button>
+          <button class="btn btn-logout" @click="logout()">ログアウト</button>
         </li>
         <li>
           <p class="btn-delete-account">アカウント削除</p>
@@ -17,6 +17,16 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    logout() {
+      this.$store.dispatch('logout')
+    },
+  },
+}
+</script>
 
 <style scoped>
 h1 {
