@@ -92,7 +92,7 @@ export const actions = {
         displayName,
       })
 
-      commit('closeModalRegister')
+      commit('changeStateModalRegister')
     } catch (e) {
       alert(e.message)
     }
@@ -114,7 +114,7 @@ export const actions = {
         displayName,
       })
 
-      commit('closeModalLogin')
+      commit('changeStateModalLogin')
     } catch (e) {
       alert(e.message)
     }
@@ -154,5 +154,24 @@ export const actions = {
   setUserData({ commit }, payload) {
     commit('setUserUid', payload.userUid)
     commit('setUserName', payload.displayName)
+  },
+
+  // firestore、POSTデータ登録
+  async sendPostData({ commit, getters }, payload) {
+    try {
+      await this.$fire.firestore
+        .collection('users')
+        .doc(getters.getUserUid)
+        .collection('post')
+        .add({
+          instrument: payload.instrument,
+          title: payload.title,
+          url: payload.url,
+          comment: payload.comment,
+        })
+      commit('changeStateModalPost')
+    } catch (e) {
+      alert(e.message)
+    }
   },
 }

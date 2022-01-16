@@ -10,7 +10,7 @@
       <div class="post-screen-main-inner">
         <p>楽器選択</p>
         <div class="select">
-          <select>
+          <select v-model="postDate.instrument">
             <option selected disabled>楽器種類</option>
             <option>Guitar</option>
             <option>Bass</option>
@@ -18,7 +18,7 @@
             <option>Drum</option>
           </select>
         </div>
-        <div class="inner-serach">
+        <!-- <div class="inner-serach">
           <label for="serach">YouTube検索</label>
         </div>
         <div class="serach">
@@ -26,29 +26,57 @@
           <button class="serach-btn" @click="openSerchResult()">
             <fa :icon="faSearch" class="serach-icon" />
           </button>
-        </div>
+        </div> -->
         <div class="inner-title">
           <label for="title">タイトル</label>
         </div>
         <div class="title-input">
-          <input id="title" type="text" />
+          <input id="title" v-model="postDate.title" type="text" />
         </div>
         <div class="inner-url">
           <label for="url">URL</label>
         </div>
         <div class="url-input">
-          <input id="url" type="text" />
+          <input
+            id="url"
+            v-model="postDate.url"
+            type="text"
+            placeholder="(例)https://www.youtube.com/"
+          />
         </div>
-        <div class="inner-foot-group">
-          <img
+        <div class="preview-screen">
+          <link-prevue :url="imgPreview">
+            <template slot-scope="props">
+              <div class="card" style="width: 100%">
+                <img class="card-img-top" :src="props.img" :alt="props.title" />
+                <!-- <div class="card-block">
+                    <h4 class="card-title">{{ props.title }}</h4>
+                    <p class="card-text">{{ props.description }}</p>
+                  </div> -->
+              </div>
+            </template>
+          </link-prevue>
+          <div>
+            <button class="prevue-btn" @click="previewImgButton()">
+              プレビュー表示
+            </button>
+          </div>
+        </div>
+        <!-- <img
             src="https://placehold.jp/ffffff/8a8a8a/208x100.png?text=IMAGE"
             alt="画像が入ります"
-          />
-          <textarea cols="30" rows="10" placeholder="オススメの理由"></textarea>
+          /> -->
+        <div class="textarea">
+          <textarea
+            v-model="postDate.comment"
+            cols="30"
+            rows="10"
+            placeholder="オススメの理由"
+          ></textarea>
         </div>
       </div>
       <div class="wrapper-btn">
-        <button class="post-btn">投稿</button>
+        <button class="post-btn" @click="register()">投稿</button>
       </div>
     </div>
     <Modal v-if="serchResults">
@@ -62,7 +90,14 @@ import { faTimesCircle, faSearch } from '@fortawesome/free-solid-svg-icons'
 export default {
   data() {
     return {
+      postDate: {
+        instrument: '',
+        title: '',
+        url: '',
+        comment: '',
+      },
       serchResults: false,
+      imgPreview: 'https://www.youtube.com/',
     }
   },
   computed: {
@@ -82,6 +117,17 @@ export default {
     },
     closeSerchResult() {
       this.serchResults = false
+    },
+    register() {
+      this.$store.dispatch('sendPostData', {
+        instrument: this.postDate.instrument,
+        title: this.postDate.title,
+        url: this.postDate.url,
+        comment: this.postDate.comment,
+      })
+    },
+    previewImgButton() {
+      this.imgPreview = this.postDate.url
     },
   },
 }
@@ -115,7 +161,7 @@ export default {
 .post-screen-main {
   background-color: #ffffff;
   width: 570px;
-  height: 900px;
+  height: 950px;
   border-radius: 0px 0px 43px 43px;
   padding-top: 50px;
 }
@@ -209,7 +255,7 @@ input {
   position: relative;
 }
 
-.post-screen-main-inner p::before {
+.post-screen-main-inner > p::before {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -257,7 +303,7 @@ input {
 }
 
 .wrapper-btn {
-  margin-top: 30px;
+  margin-top: 45px;
   text-align: center;
 }
 
@@ -273,19 +319,41 @@ input {
   border-radius: 30px;
 }
 
-.inner-foot-group {
+/* .inner-foot-group {
   padding-top: 60px;
-  padding-bottom: 30px;
-}
-
+} */
+/* 
 img {
   border: 1px solid#282727;
-}
+} */
 
 textarea {
   resize: none;
   width: 208px;
   height: 100px;
   border: 1px solid#282727;
+}
+
+.textarea {
+  text-align: center;
+}
+
+.card-img-top {
+  width: 240px;
+  height: 170px;
+}
+
+.preview-screen {
+  margin-top: 60px;
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.prevue-btn {
+  font-size: 0.8rem;
+  color: #323030;
+  border: 1px solid#6a6868;
+  border-radius: 10px;
+  padding: 7px;
 }
 </style>
